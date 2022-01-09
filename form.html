@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>งานทะเบียน</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="./form.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body>
+    <div class="grid-container">
+        <div id="ta" class="grid-from ">
+            <div class="input-group-prepend item1" style="margin: 10px;">
+                <!-- ID -->
+                <span class="input-group-text" id="">รหัสนักศึกษา</span>
+                <input type="text" v-model="id" class="form-control" style="width: 300px;">
+
+            </div>
+            <div class="input-group-prepend item2" style="width: 650px;  margin: 10px;">
+                <!-- Name-->
+                <span class="input-group-text" id="">ชื่อ </span>
+                <input type="text" v-model="name" class="form-control">
+                <!-- Last Name -->
+                <span class="input-group-text" id="">นามสกุล</span>
+                <input type="text" v-model="lastname" class="form-control">
+            </div>
+
+            <div class="input-group-prepend item3" style="margin: 10px;">
+                <!-- Email -->
+                <span class="input-group-text" id="">E-mail</span>
+                <input type="text" v-model="email" class="form-control" style="width: 250px;">
+
+
+                <div class="input-group-prepend">
+                    <!-- GPA -->
+                    <span class="input-group-text" id="inputGroup-sizing-sm">GPA</span>
+                    <input type="text" v-model="gpa" class="form-control" style="width: 150px;">
+                </div>
+
+            </div>
+            <div class="item4">
+                <!-- Submit -->
+                <button @click="addStudent()">Submit</button>
+            </div>
+
+        </div>
+
+        <div>
+            <table class="table">
+
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ชื่อ</th>
+                        <th>นามสกุล</th>
+                        <th>E-mail</th>
+                        <th>GPA</th>
+                    </tr>
+                </thead>
+
+                <tbody id="app2">
+
+                    <tr v-for="item in stu2">
+
+                        <td v-if="item.gpa>=2" style="color: #000000;">{{item.id}}</td>
+                        <td v-else style="color: #ff0000; "> <b> {{item.id}}</b></td>
+
+                        <td v-if="item.gpa>=2" style="color: #000000;">{{item.name}}</td>
+                        <td v-else style="color: #ff0000;"> <b>{{item.name}}</b></td>
+
+                        <td v-if="item.gpa>=2" style="color: #000000;">{{item.lastname}}</td>
+                        <td v-else style="color: #ff0000;"><b>{{item.lastname}}</b></td>
+
+                        <td v-if="item.gpa>=2" style="color: #000000;">{{item.email}}</td>
+                        <td v-else style="color: #ff0000;"><b>{{item.email}}</b></td>
+
+                        <td v-if="item.gpa>=2" style="color: #000000;">{{item.gpa}}</td>
+                        <td v-else style="color: #ff0000;"><b>{{item.gpa}}</b></td>
+
+
+
+                        <td><button @click="deleteStudent(item.id)">Delete</button></td>
+
+                    </tr>
+
+
+                </tbody>
+
+
+
+            </table>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    var app = new Vue({
+        el: '#app2',
+        data: {
+
+
+
+            stu2: [
+                { id: 1, name: 'Earn', lastname: 'tan', email: "zhuanen#@.com", gpa: 3.90 },
+                { id: 2, name: 'Tan', lastname: 'Non', email: "zhuanen#@.com", gpa: 3.90 },
+                { id: 3, name: 'fern', lastname: 'Intawong', email: "zhuanen#@.com", gpa: 3.90 }
+            ]
+
+        },
+        methods: {
+            deleteStudent: function (i) {
+
+                //id ห้ามซ้ำ
+                this.stu2.splice(this.stu2.map(object => object.id).indexOf(i), 1);
+
+
+            },
+            add: function (i) {
+
+            }
+
+        }
+    })
+    var ta = new Vue({
+        el: '#ta',
+        data: {
+
+
+            id: null,
+            name: '',
+            lastname: '',
+            email: '',
+            gpa: null,
+            che: 1,
+            mess: {},
+            c_id: "",
+            c_gpa: ""
+
+
+        },
+        methods: {
+
+            addStudent: function () {
+
+                this.che = this.check();
+
+                if (this.che == 0) return;
+                const stu = new Student(this.id, this.name, this.lastname, this.email, this.gpa);
+                this.mess = stu;
+                app.stu2.push(this.mess);
+
+            },
+            check: function () {
+                this.c_id = parseInt(this.id);
+                this.c_gpa = parseFloat(this.gpa);
+                if (this.id == null || this.id == 0 || this.name == "" || this.lastname == "" || this.email == "" || this.gpa == null) {
+                    alert('อย่าให้มีช่อว่าง');
+                    return 0
+
+                }
+
+                else if (isNaN(this.c_id) || isNaN(this.c_gpa)) {
+                    alert('รหัสนักศึกษา และ GPA ต้องเป็นตัวเลข');
+                    return 0
+
+                }
+                else if (this.gpa > 4 || this.gpa < 0) {
+                    alert('GPA ต้องมีค่าไม่เกิน 4 และ ไม่น้อยกว่า 0');
+                    return 0
+                }
+
+            }
+
+
+        }
+    })
+    function Student(id, name, last, email, gpa) {
+        this.id = id;
+        this.name = name;
+        this.lastname = last;
+        this.email = email;
+        this.gpa = gpa;
+    }
+</script>
+
+
+</html>
